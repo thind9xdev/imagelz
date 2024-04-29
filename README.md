@@ -61,6 +61,6 @@ export default YourComponent;
 
 `isLoading`: Loading state of the image.
 
-(c) 2023 Phuong My Chi  Entertainment Co.,Ltd
+Copyright 2024 Mia Nguyen x Thind9xDev
 
  Licensed under the MIT License

@@ -14,36 +14,52 @@ import useImageBroken from "./hooks/useImageBroken";
 
 export type ImageLazyProps = {
   imgUrl: string;
-  width?: any;
-  height?: any;
+  imgUrlDefault?: string | "https://placehold.co/280x200";
+  width?: string | number;
+  height?: string | number;
   radiusBorder?: number;
   className?: string;
   onClick?: MouseEventHandler<HTMLImageElement>;
   onKeyDown?: KeyboardEventHandler<HTMLImageElement>;
+  onMouseDown?: MouseEventHandler<HTMLImageElement>;
+  onMouseEnter?: MouseEventHandler<HTMLImageElement>;
+  onMouseLeave?: MouseEventHandler<HTMLImageElement>;
+  onMouseUp?: MouseEventHandler<HTMLImageElement>;
+
   onKeyPress?: () => void;
   style?: CSSProperties;
-  alt?: any;
+  alt?: string;
   id?: string;
   crossOrigin?: "anonymous" | "use-credentials" | "";
   loading?: "lazy" | "eager";
   isLoading?: boolean;
+  referrerPolicy?:
+    | "no-referrer"
+    | "no-referrer-when-downgrade"
+    | "origin"
+    | "origin-when-cross-origin"
+    | "unsafe-url";
 };
 
 const ImageLazy = React.memo(function ImageLazy({
   alt,
-  radiusBorder,
   onClick,
   style,
   height,
-  onKeyPress,
   onKeyDown,
   id,
   crossOrigin,
   loading,
   imgUrl,
+  imgUrlDefault,
   width,
   className,
   isLoading,
+  referrerPolicy,
+  onMouseDown,
+  onMouseEnter,
+  onMouseLeave,
+  onMouseUp,
 }: ImageLazyProps) {
   // check if image url work or not , it work  return true, else return false;
   const isUrl = useImageBroken(imgUrl);
@@ -51,7 +67,8 @@ const ImageLazy = React.memo(function ImageLazy({
   const imgRef = useRef<HTMLImageElement>(null);
 
   function validURL(str: string) {
-    let regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+    let regex =
+      /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
     if (!regex.test(str)) {
       return false;
     } else {
@@ -68,9 +85,7 @@ const ImageLazy = React.memo(function ImageLazy({
   };
   const isUrlValid = getHttps();
 
-
   // eslint-disable-next-line consistent-return
-
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -93,23 +108,21 @@ const ImageLazy = React.memo(function ImageLazy({
         observer.unobserve(imgRef.current);
       }
     };
-  }, [])
+  }, []);
 
-
-  if (isLoading || !isUrl  || !shouldLoad) {
+  if (isLoading || !isUrl || !shouldLoad) {
     return (
       <picture>
         <source
-          data-srcset={`https://i.imgur.com/9u7kJQK.png`}
-          srcSet={`https://i.imgur.com/9u7kJQK.png`}
+          data-srcset={imgUrlDefault}
+          srcSet={imgUrlDefault}
           type="image/png"
         />
         <img
           ref={imgRef}
-
-          src={`https://i.imgur.com/9u7kJQK.png`}
+          src={imgUrlDefault}
           alt={alt}
-          data-src={`https://i.imgur.com/9u7kJQK.png`}
+          data-src={imgUrlDefault}
           loading={loading}
           crossOrigin={crossOrigin}
           onClick={onClick}
@@ -117,9 +130,12 @@ const ImageLazy = React.memo(function ImageLazy({
           width={width}
           height={height}
           onKeyDown={onKeyDown}
-          
-
+          onMouseDown={onMouseDown}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onMouseUp={onMouseUp}
           id={id}
+          referrerPolicy={referrerPolicy}
           className={`${className} lazyload`}
         />
       </picture>
@@ -129,25 +145,28 @@ const ImageLazy = React.memo(function ImageLazy({
     <>
       <picture key={isUrlValid}>
         <source
-          data-srcset={isUrl ? isUrlValid : `https://i.imgur.com/9u7kJQK.png`}
-          srcSet={isUrl ? isUrlValid : `https://i.imgur.com/9u7kJQK.png`}
+          data-srcset={isUrl ? isUrlValid : imgUrlDefault}
+          srcSet={isUrl ? isUrlValid : imgUrlDefault}
           type="image/webp"
         />
         <img
-        key={isUrlValid}
-          src={isUrl ? isUrlValid : `https://i.imgur.com/9u7kJQK.png`}
+          key={isUrlValid}
+          src={isUrl ? isUrlValid : imgUrlDefault}
           alt={alt}
           ref={imgRef}
-
-          data-src={isUrl ? isUrlValid : `https://i.imgur.com/9u7kJQK.png`}
+          data-src={isUrl ? isUrlValid : imgUrlDefault}
           loading={loading}
           crossOrigin={crossOrigin}
           onClick={onClick}
+          onMouseDown={onMouseDown}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          onMouseUp={onMouseUp}
           style={style}
-          width={"100%"}
-          height={"100%"}
-
+          width={width}
+          height={width}
           id={id}
+          referrerPolicy={referrerPolicy}
           className={`${className} lazyload`}
         />
       </picture>
