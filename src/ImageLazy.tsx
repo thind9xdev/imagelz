@@ -17,7 +17,6 @@ export type ImageLazyProps = {
   imgUrlDefault?: string | "https://placehold.co/280x200";
   width?: string | number;
   height?: string | number;
-  radiusBorder?: number;
   className?: string;
   onClick?: MouseEventHandler<HTMLImageElement>;
   onKeyDown?: KeyboardEventHandler<HTMLImageElement>;
@@ -25,6 +24,7 @@ export type ImageLazyProps = {
   onMouseEnter?: MouseEventHandler<HTMLImageElement>;
   onMouseLeave?: MouseEventHandler<HTMLImageElement>;
   onMouseUp?: MouseEventHandler<HTMLImageElement>;
+  onLoad?: MouseEventHandler<HTMLImageElement>;
 
   onKeyPress?: () => void;
   style?: CSSProperties;
@@ -60,6 +60,7 @@ const ImageLazy = React.memo(function ImageLazy({
   onMouseEnter,
   onMouseLeave,
   onMouseUp,
+  onLoad
 }: ImageLazyProps) {
   // check if image url work or not , it work  return true, else return false;
   const isUrl = useImageBroken(imgUrl);
@@ -135,6 +136,8 @@ const ImageLazy = React.memo(function ImageLazy({
           onMouseLeave={onMouseLeave}
           onMouseUp={onMouseUp}
           id={id}
+          onLoad={onLoad}
+          
           referrerPolicy={referrerPolicy}
           className={`${className} lazyload`}
         />
@@ -164,7 +167,9 @@ const ImageLazy = React.memo(function ImageLazy({
           onMouseUp={onMouseUp}
           style={style}
           width={width}
-          height={width}
+          onLoad={onLoad}
+          
+          height={height}
           id={id}
           referrerPolicy={referrerPolicy}
           className={`${className} lazyload`}

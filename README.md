@@ -2,7 +2,12 @@
 
 ## Getting started :
 
-1.  npm i image-lazy-component
+1. ## Install 
+
+```bash
+  npm i image-lazy-component
+```
+2. ## Use in react or nextjs :
 
 ```tsx
 import React from "react";
@@ -12,7 +17,6 @@ const YourComponent = () => {
   return (
     <ImageLazy
       alt="Alt text for the image"
-      radiusBorder={5}
       onClick={() => console.log("Image clicked")}
       style={{ width: "200px", height: "auto" }}
       height={200}
@@ -23,6 +27,7 @@ const YourComponent = () => {
       loading="lazy"
       imgUrl="https://example.com/your-image.jpg"
       width={300}
+      imgUrlDefault="https://placehold.co/280x200"
       className="custom-image-class"
       isLoading={false}
     />
@@ -55,12 +60,17 @@ export default YourComponent;
 
 `imgUrl`: URL of the image.
 
+`imgUrlDefault` URL  default when image broken or not working,You should set image from placeholder
+
 `width`: Width of the image.
 
 `className`: Custom CSS class of the image.
 
 `isLoading`: Loading state of the image.
 
-Copyright 2024 Mia Nguyen x Thind9xDev
+`referrerPolicy`: attribute specifies which referrer information to use when fetching the resource.
+
+
+Copyright 2024 mia nguyen x thind9xdev
 
  Licensed under the MIT License
