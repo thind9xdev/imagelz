@@ -1,4 +1,5 @@
 // This is component Image with Lazy load
+import "lazysizes";
 import React, {
   CSSProperties,
   KeyboardEventHandler,
@@ -7,7 +8,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import "lazysizes";
 // import a plugin
 import "lazysizes/plugins/parent-fit/ls.parent-fit";
 import useImageBroken from "./hooks/useImageBroken";
@@ -62,7 +62,6 @@ const ImageLazy = React.memo(function ImageLazy({
   onMouseUp,
   onLoad
 }: ImageLazyProps) {
-  // check if image url work or not , it work  return true, else return false;
   const isUrl = useImageBroken(imgUrl);
   const [shouldLoad, setShouldLoad] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);

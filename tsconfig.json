@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "jsx": "react",
     "strict": true,
@@ -10,8 +10,12 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true
   },
+  "types": [
+    "node"
+  ],
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "src/covert.ts"
   ],
   "exclude": [
     "node_modules"
