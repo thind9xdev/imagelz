@@ -17,24 +17,101 @@
 
 /* 
 hook để kiểm tra hình ảnh bị lỗi đường dẫn
+Optimized version with proper cleanup and memory management
 */
 
-import { useEffect, useState } from "react";
-const useImageBroken = (url: string) => {
-  const [isHaveImg, setImg] = useState(true);
-  useEffect(() => {
-    const s = document.createElement("IMG") as HTMLImageElement;
-    s.src = url;
-    s.onerror = function () {
-      setImg(false);
-    };
-    // eslint-disable-next-line func-names
-    s.onload = function () {
-      setImg(true);
-    };
-  }, [url]);
+import { useEffect, useState, useCallback, useRef } from "react";
 
-  return isHaveImg;
+export interface UseImageBrokenOptions {
+  timeout?: number;
+  retryCount?: number;
+  retryDelay?: number;
+}
+
+const useImageBroken = (url: string, options: UseImageBrokenOptions = {}) => {
+  const { timeout = 10000, retryCount = 2, retryDelay = 1000 } = options;
+  const [isHaveImg, setImg] = useState<boolean | null>(null); // null = loading, true = success, false = error
+  const [retries, setRetries] = useState(0);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const cleanup = useCallback(() => {
+    if (imgRef.current) {
+      imgRef.current.onload = null;
+      imgRef.current.onerror = null;
+      imgRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
+
+  const attemptLoad = useCallback((imageUrl: string, attempt: number = 0) => {
+    if (!imageUrl) {
+      setImg(false);
+      return;
+    }
+
+    setImg(null); // Set loading state
+    cleanup();
+
+    const img = new Image();
+    imgRef.current = img;
+
+    // Set timeout for image loading
+    timeoutRef.current = setTimeout(() => {
+      if (attempt < retryCount) {
+        setTimeout(() => attemptLoad(imageUrl, attempt + 1), retryDelay);
+        setRetries(attempt + 1);
+      } else {
+        setImg(false);
+        cleanup();
+      }
+    }, timeout);
+
+    img.onload = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      setImg(true);
+      setRetries(0);
+    };
+
+    img.onerror = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      
+      if (attempt < retryCount) {
+        setTimeout(() => attemptLoad(imageUrl, attempt + 1), retryDelay);
+        setRetries(attempt + 1);
+      } else {
+        setImg(false);
+        setRetries(0);
+      }
+    };
+
+    img.src = imageUrl;
+  }, [timeout, retryCount, retryDelay, cleanup]);
+
+  useEffect(() => {
+    if (url) {
+      attemptLoad(url);
+    } else {
+      setImg(false);
+    }
+
+    return cleanup;
+  }, [url, attemptLoad, cleanup]);
+
+  return {
+    isValid: isHaveImg,
+    isLoading: isHaveImg === null,
+    retries
+  };
 };
 
 export default useImageBroken;

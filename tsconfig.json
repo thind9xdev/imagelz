@@ -1,23 +1,32 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2018",
     "module": "commonjs",
-    "jsx": "react",
+    "moduleResolution": "node",
+    "lib": ["DOM", "ES2018"],
+    "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
-    "declaration": true
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": false,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "types": [
-    "node"
-  ],
   "include": [
-    "src/**/*",
-    "src/covert.ts"
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }
