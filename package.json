@@ -1,6 +1,6 @@
 {
   "name": "image-lazy-component",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A React component for lazy loading images with advanced image processing features.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
