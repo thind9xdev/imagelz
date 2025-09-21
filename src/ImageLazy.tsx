@@ -6,7 +6,6 @@
 
 import "lazysizes";
 import "lazysizes/plugins/parent-fit/ls.parent-fit";
-import "./ImageLazy.css";
 import React, {
   CSSProperties,
   KeyboardEventHandler,
