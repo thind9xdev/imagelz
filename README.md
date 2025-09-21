@@ -1,76 +1,249 @@
-# A React node module for lazy loading images.
+# ImageLazy - Advanced React Image Component
 
-## Getting started :
+A powerful React component for lazy loading images with advanced image processing features, progressive loading, and optimization capabilities.
 
-1. ## Install 
+## 🚀 Features
+
+- **Lazy Loading**: Efficient lazy loading with Intersection Observer
+- **Progressive Loading**: Blur-to-sharp loading effect for better UX
+- **Image Optimization**: Automatic image optimization and format conversion
+- **Responsive Images**: Support for responsive images with srcset
+- **Error Handling**: Smart retry mechanism for failed image loads
+- **TypeScript Support**: Full TypeScript support with comprehensive types
+- **Accessibility**: Built-in accessibility features
+- **Memory Efficient**: Optimized memory usage and cleanup
+- **Customizable**: Highly customizable with extensive props
+
+## 📦 Installation
 
 ```bash
-  npm i image-lazy-component
+npm install image-lazy-component
 ```
-2. ## Use in react or nextjs :
+
+## 🔧 Basic Usage
 
 ```tsx
 import React from "react";
-import { ImageLazy } from "image-lazy-component"
+import { ImageLazy } from "image-lazy-component";
 
-const YourComponent = () => {
+const BasicExample = () => {
   return (
     <ImageLazy
-      alt="Alt text for the image"
-      onClick={() => console.log("Image clicked")}
-      style={{ width: "200px", height: "auto" }}
-      height={200}
-      onKeyPress={() => console.log("Key pressed")}
-      onKeyDown={() => console.log("Key down")}
-      id="your-image-id"
-      crossOrigin="anonymous"
-      loading="lazy"
-      imgUrl="https://example.com/your-image.jpg"
-      width={300}
-      imgUrlDefault="https://placehold.co/280x200"
-      className="custom-image-class"
-      isLoading={false}
+      imgUrl="https://example.com/image.jpg"
+      alt="Example image"
+      width={400}
+      height={300}
     />
   );
 };
-
-export default YourComponent;
 ```
-## Props :
 
-`alt`: Placeholder text displayed when the image fails to load.
+## 🎨 Advanced Usage
 
-`radiusBorder`: The border radius of the image.
+### Progressive Loading with Blur Effect
 
-`onClick`: Event handler function triggered when clicking on the image.
+```tsx
+import { ImageLazy } from "image-lazy-component";
 
-`style`: Inline CSS for the image.
+const ProgressiveExample = () => {
+  return (
+    <ImageLazy
+      imgUrl="https://example.com/high-quality.jpg"
+      alt="Progressive loading example"
+      progressive={true}
+      progressiveOptions={{
+        blurAmount: 15,
+        transitionDuration: 500
+      }}
+      width={600}
+      height={400}
+    />
+  );
+};
+```
 
-`height`: Height of the image.
+### Responsive Images
 
-`onKeyPress`: Event handler function triggered when a key is pressed while the image is focused.
+```tsx
+import { ImageLazy } from "image-lazy-component";
 
-`onKeyDown`: Event handler function triggered when a key is pressed while the image is focused.
+const ResponsiveExample = () => {
+  return (
+    <ImageLazy
+      imgUrl="https://example.com/image.jpg"
+      alt="Responsive image"
+      responsive={true}
+      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      optimizationOptions={{
+        quality: 85,
+        format: 'webp'
+      }}
+      width="100%"
+      height="auto"
+    />
+  );
+};
+```
 
-`id`: ID of the image.
+### With Error Handling and Retry
 
-`crossOrigin`: Cross-origin attribute of the image.
+```tsx
+import { ImageLazy } from "image-lazy-component";
 
-`loading`: Loading mode of the image (lazy or eager).
+const RetryExample = () => {
+  return (
+    <ImageLazy
+      imgUrl="https://example.com/might-fail.jpg"
+      imgUrlDefault="https://placehold.co/400x300"
+      alt="Image with retry"
+      retryOptions={{
+        retryCount: 3,
+        retryDelay: 2000,
+        timeout: 10000
+      }}
+      errorComponent={
+        <div>😞 Failed to load after retries</div>
+      }
+      loadingComponent={
+        <div>🔄 Loading...</div>
+      }
+    />
+  );
+};
+```
 
-`imgUrl`: URL of the image.
+### Custom Skeleton Loading
 
-`imgUrlDefault` URL  default when image broken or not working,You should set image from placeholder
+```tsx
+import { ImageLazy } from "image-lazy-component";
 
-`width`: Width of the image.
+const SkeletonExample = () => {
+  return (
+    <ImageLazy
+      imgUrl="https://example.com/image.jpg"
+      alt="Custom skeleton"
+      showSkeleton={true}
+      skeletonColor="#e0e0e0"
+      loadingComponent={
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          height: '100%' 
+        }}>
+          Loading...
+        </div>
+      }
+    />
+  );
+};
+```
 
-`className`: Custom CSS class of the image.
+## 📚 Props Reference
 
-`isLoading`: Loading state of the image.
+### Basic Props
 
-`referrerPolicy`: attribute specifies which referrer information to use when fetching the resource.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `imgUrl` | `string` | - | **Required**. Main image URL |
+| `imgUrlDefault` | `string` | `"https://placehold.co/280x200"` | Fallback image URL |
+| `alt` | `string` | `""` | Alternative text for accessibility |
+| `width` | `string \| number` | - | Image width |
+| `height` | `string \| number` | - | Image height |
+| `className` | `string` | `""` | CSS class name |
+| `style` | `CSSProperties` | `{}` | Inline styles |
+| `loading` | `"lazy" \| "eager"` | `"lazy"` | Loading behavior |
 
+### Advanced Props
 
-Copyright 2024 mia nguyen x thind9xdev
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `progressive` | `boolean` | `false` | Enable progressive loading |
+| `progressiveOptions` | `UseProgressiveImageOptions` | `{}` | Progressive loading options |
+| `responsive` | `boolean` | `false` | Enable responsive images |
+| `sizes` | `string` | `"(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"` | Sizes attribute for responsive images |
+| `optimizationOptions` | `ImageOptimizationOptions` | `{}` | Image optimization settings |
+| `retryOptions` | `UseImageBrokenOptions` | `{}` | Retry configuration |
+| `showSkeleton` | `boolean` | `true` | Show loading skeleton |
+| `skeletonColor` | `string` | `"#f0f0f0"` | Skeleton background color |
 
- Licensed under the MIT License
+### Event Handlers
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onClick` | `MouseEventHandler<HTMLImageElement>` | Click event handler |
+| `onLoad` | `MouseEventHandler<HTMLImageElement>` | Load event handler |
+| `onError` | `MouseEventHandler<HTMLImageElement>` | Error event handler |
+| `onMouseEnter` | `MouseEventHandler<HTMLImageElement>` | Mouse enter handler |
+| `onMouseLeave` | `MouseEventHandler<HTMLImageElement>` | Mouse leave handler |
+
+### Custom Components
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `loadingComponent` | `React.ReactNode` | Custom loading indicator |
+| `errorComponent` | `React.ReactNode` | Custom error display |
+
+## 🔧 Utility Functions
+
+The package also exports utility functions for advanced image processing:
+
+```tsx
+import { 
+  optimizeImageUrl, 
+  generateSrcSet, 
+  isValidImageUrl,
+  ensureHttps 
+} from "image-lazy-component";
+
+// Optimize image URL
+const optimized = optimizeImageUrl("https://example.com/image.jpg", {
+  width: 800,
+  height: 600,
+  quality: 85,
+  format: 'webp'
+});
+
+// Generate responsive srcset
+const srcSet = generateSrcSet("https://example.com/image.jpg", {
+  quality: 80
+});
+
+// Validate image URL
+const isValid = isValidImageUrl("https://example.com/image.jpg");
+```
+
+## 🎯 TypeScript Support
+
+Full TypeScript support with comprehensive type definitions:
+
+```tsx
+import { ImageLazy, ImageLazyProps } from "image-lazy-component";
+
+const TypedComponent: React.FC<ImageLazyProps> = (props) => {
+  return <ImageLazy {...props} />;
+};
+```
+
+## 🔍 Browser Support
+
+- Modern browsers with Intersection Observer support
+- Fallback handling for older browsers
+- Supports WebP, AVIF format detection
+- Progressive enhancement approach
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📞 Support
+
+If you have any questions or issues, please open an issue on [GitHub](https://github.com/thind9xdev/imagelz/issues).
+
+---
+
+Made with ❤️ by [thind9xdev](https://github.com/thind9xdev)
